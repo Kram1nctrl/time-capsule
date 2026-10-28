@@ -1,0 +1,152 @@
+<Application xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="TimeCapsule.Gui.App"
+             RequestedThemeVariant="Light">
+
+    <Application.Styles>
+        <FluentTheme />
+
+        <Style Selector="Button">
+            <Setter Property="Background" Value="{DynamicResource ButtonBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource ButtonBrush}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="0" />
+            <Setter Property="Foreground" Value="{DynamicResource HeadingBrush}" />
+            <Setter Property="Padding" Value="16,8" />
+        </Style>
+        <Style Selector="Button:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Background" Value="{DynamicResource ButtonHoverBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource ButtonHoverBrush}" />
+        </Style>
+        <Style Selector="Button:pressed /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Background" Value="{DynamicResource ButtonPressedBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource ButtonPressedBrush}" />
+        </Style>
+        <Style Selector="Button.primary">
+            <Setter Property="Background" Value="{DynamicResource PrimaryBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource PrimaryBrush}" />
+            <Setter Property="Foreground" Value="#ffffff" />
+        </Style>
+        <Style Selector="Button.primary:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Background" Value="{DynamicResource PrimaryHoverBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource PrimaryHoverBrush}" />
+        </Style>
+        <Style Selector="Button.primary:pressed /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Background" Value="{DynamicResource PrimaryPressedBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource PrimaryPressedBrush}" />
+        </Style>
+        <Style Selector="Button:disabled">
+            <Setter Property="Opacity" Value="0.35" />
+        </Style>
+
+        <Style Selector="Button.remove">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="CornerRadius" Value="0" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="Width" Value="24" />
+            <Setter Property="Height" Value="24" />
+            <Setter Property="FontSize" Value="15" />
+            <Setter Property="Foreground" Value="{DynamicResource FineBrush}" />
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+        </Style>
+        <Style Selector="Button.remove:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Background" Value="{DynamicResource ButtonHoverBrush}" />
+            <Setter Property="Foreground" Value="{DynamicResource HeadingBrush}" />
+        </Style>
+
+        <Style Selector="TextBox">
+            <Setter Property="Background" Value="{DynamicResource InputBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource EdgeBrush}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="0" />
+            <Setter Property="Padding" Value="10,0" />
+        </Style>
+        <Style Selector="TextBox:pointerover /template/ Border#PART_BorderElement">
+            <Setter Property="BorderBrush" Value="{DynamicResource FineBrush}" />
+        </Style>
+        <Style Selector="TextBox:focus /template/ Border#PART_BorderElement">
+            <Setter Property="BorderBrush" Value="{DynamicResource PrimaryBrush}" />
+        </Style>
+
+        <Style Selector="ListBox">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Padding" Value="0" />
+        </Style>
+        <Style Selector="ListBoxItem">
+            <Setter Property="CornerRadius" Value="0" />
+            <Setter Property="Padding" Value="12,9" />
+            <Setter Property="Margin" Value="0,1" />
+        </Style>
+        <Style Selector="ListBoxItem:pointerover /template/ ContentPresenter">
+            <Setter Property="Background" Value="{DynamicResource RowHoverBrush}" />
+        </Style>
+        <Style Selector="ListBoxItem:selected /template/ ContentPresenter">
+            <Setter Property="Background" Value="{DynamicResource SelectedBrush}" />
+        </Style>
+        <Style Selector="ListBoxItem:selected:pointerover /template/ ContentPresenter">
+            <Setter Property="Background" Value="{DynamicResource SelectedHoverBrush}" />
+        </Style>
+        <Style Selector="ListBoxItem:selected">
+            <Setter Property="Foreground" Value="{DynamicResource HeadingBrush}" />
+        </Style>
+    </Application.Styles>
+
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.ThemeDictionaries>
+                <ResourceDictionary x:Key="Light">
+                    <SolidColorBrush x:Key="PageBrush" Color="#ffffff" />
+                    <SolidColorBrush x:Key="InputBrush" Color="#ffffff" />
+                    <SolidColorBrush x:Key="HeadingBrush" Color="#333333" />
+                    <SolidColorBrush x:Key="BodyBrush" Color="#4f4f4f" />
+                    <SolidColorBrush x:Key="MutedBrush" Color="#6d6d6d" />
+                    <SolidColorBrush x:Key="FineBrush" Color="#7f7f7f" />
+                    <SolidColorBrush x:Key="RuleBrush" Color="#e3e3e3" />
+                    <SolidColorBrush x:Key="EdgeBrush" Color="#d5d5d5" />
+                    <SolidColorBrush x:Key="ButtonBrush" Color="#eeeeee" />
+                    <SolidColorBrush x:Key="ButtonHoverBrush" Color="#d5d5d5" />
+                    <SolidColorBrush x:Key="ButtonPressedBrush" Color="#e0e0e0" />
+                    <SolidColorBrush x:Key="PrimaryBrush" Color="#005076" />
+                    <SolidColorBrush x:Key="PrimaryHoverBrush" Color="#004167" />
+                    <SolidColorBrush x:Key="PrimaryPressedBrush" Color="#003350" />
+                    <SolidColorBrush x:Key="SelectedBrush" Color="#e6e6e6" />
+                    <SolidColorBrush x:Key="SelectedHoverBrush" Color="#dedede" />
+                    <SolidColorBrush x:Key="RowHoverBrush" Color="#f8f8f8" />
+                    <SolidColorBrush x:Key="PanelBrush" Color="#f8f8f8" />
+                </ResourceDictionary>
+
+                <ResourceDictionary x:Key="Dark">
+                    <SolidColorBrush x:Key="PageBrush" Color="#1a1a1a" />
+                    <SolidColorBrush x:Key="InputBrush" Color="#242424" />
+                    <SolidColorBrush x:Key="HeadingBrush" Color="#eeeeee" />
+                    <SolidColorBrush x:Key="BodyBrush" Color="#c9c9c9" />
+                    <SolidColorBrush x:Key="MutedBrush" Color="#9a9a9a" />
+                    <SolidColorBrush x:Key="FineBrush" Color="#8a8a8a" />
+                    <SolidColorBrush x:Key="RuleBrush" Color="#333333" />
+                    <SolidColorBrush x:Key="EdgeBrush" Color="#3d3d3d" />
+                    <SolidColorBrush x:Key="ButtonBrush" Color="#2b2b2b" />
+                    <SolidColorBrush x:Key="ButtonHoverBrush" Color="#3d3d3d" />
+                    <SolidColorBrush x:Key="ButtonPressedBrush" Color="#454545" />
+                    <SolidColorBrush x:Key="PrimaryBrush" Color="#005076" />
+                    <SolidColorBrush x:Key="PrimaryHoverBrush" Color="#006a9a" />
+                    <SolidColorBrush x:Key="PrimaryPressedBrush" Color="#003d5a" />
+                    <SolidColorBrush x:Key="SelectedBrush" Color="#333333" />
+                    <SolidColorBrush x:Key="SelectedHoverBrush" Color="#3d3d3d" />
+                    <SolidColorBrush x:Key="RowHoverBrush" Color="#242424" />
+                    <SolidColorBrush x:Key="PanelBrush" Color="#232323" />
+                </ResourceDictionary>
+            </ResourceDictionary.ThemeDictionaries>
+
+            <SolidColorBrush x:Key="ToggleSwitchFillOn" Color="#005076" />
+            <SolidColorBrush x:Key="ToggleSwitchFillOnPointerOver" Color="#004167" />
+            <SolidColorBrush x:Key="ToggleSwitchFillOnPressed" Color="#003350" />
+            <SolidColorBrush x:Key="ToggleSwitchStrokeOn" Color="#005076" />
+            <SolidColorBrush x:Key="ToggleSwitchStrokeOnPointerOver" Color="#004167" />
+            <SolidColorBrush x:Key="ToggleSwitchStrokeOnPressed" Color="#003350" />
+        </ResourceDictionary>
+    </Application.Resources>
+
+</Application>

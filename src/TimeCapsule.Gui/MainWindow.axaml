@@ -1,0 +1,173 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="using:TimeCapsule.Gui"
+        x:Class="TimeCapsule.Gui.MainWindow"
+        Title="Time Capsule"
+        Width="1000" Height="680" MinWidth="780" MinHeight="500"
+        Background="{DynamicResource PageBrush}" Foreground="{DynamicResource BodyBrush}" FontSize="13"
+        FontFamily="JetBrains Mono">
+
+    <Grid RowDefinitions="Auto,Auto,*,Auto" Margin="28">
+
+        <StackPanel Grid.Row="0" Spacing="14">
+            <Grid ColumnDefinitions="*,Auto">
+                <StackPanel Spacing="4">
+                    <TextBlock Text="Time Capsule" FontSize="20" FontWeight="Bold"
+                               Foreground="{DynamicResource HeadingBrush}" />
+                    <TextBlock Text="Save the apps and windows you have open now, and reopen them later."
+                               Foreground="{DynamicResource MutedBrush}" TextWrapping="Wrap" />
+                </StackPanel>
+                <Button Grid.Column="1" x:Name="ThemeButton" Classes="remove"
+                        Width="30" Height="30" VerticalAlignment="Top" Margin="20,0,0,0"
+                        AutomationProperties.Name="Dark mode"
+                        ToolTip.Tip="Switch to dark mode">
+                    <Panel>
+                        <Path x:Name="MoonIcon" Width="16" Height="16" Stretch="Uniform"
+                              Fill="{DynamicResource HeadingBrush}"
+                              Data="M16 3 A9 9 0 1 0 21 18 A7 7 0 1 1 16 3 Z" />
+                        <Path x:Name="SunIcon" Width="16" Height="16" Stretch="Uniform" IsVisible="False"
+                              Stroke="{DynamicResource HeadingBrush}" StrokeThickness="1.6"
+                              StrokeLineCap="Round" StrokeJoin="Round"
+                              Data="M8 12 A4 4 0 1 0 16 12 A4 4 0 1 0 8 12 M12 1 V3 M12 21 V23 M1 12 H3 M21 12 H23 M4.5 4.5 L6 6 M18 18 L19.5 19.5 M4.5 19.5 L6 18 M18 6 L19.5 4.5" />
+                    </Panel>
+                </Button>
+            </Grid>
+            <Border Height="2" Background="{DynamicResource PrimaryBrush}" />
+        </StackPanel>
+
+        <Grid Grid.Row="1" ColumnDefinitions="Auto,*,Auto,Auto" Margin="0,20,0,20">
+            <TextBlock Grid.Column="0" Text="Session name" VerticalAlignment="Center"
+                       Foreground="{DynamicResource MutedBrush}" Margin="0,0,12,0" />
+            <TextBox Grid.Column="1" x:Name="NameBox" PlaceholderText="e.g. monday-lab"
+                     Height="36" VerticalContentAlignment="Center" Margin="0,0,10,0" />
+            <Button Grid.Column="2" x:Name="SaveButton" Classes="primary" Content="Save this session"
+                    Margin="0,0,8,0"
+                    ToolTip.Tip="Snapshot the apps and windows that are open right now" />
+            <Button Grid.Column="3" x:Name="RefreshButton" Content="Refresh"
+                    ToolTip.Tip="Reload the list of saved sessions" />
+        </Grid>
+
+        <Grid Grid.Row="2" ColumnDefinitions="330,1,*">
+            <Grid Grid.Column="0" RowDefinitions="Auto,*,Auto">
+                <TextBlock Grid.Row="0" Text="Saved sessions" FontWeight="Bold"
+                           Foreground="{DynamicResource HeadingBrush}" Margin="0,0,0,10" />
+                <ListBox Grid.Row="1" x:Name="SessionList">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate x:DataType="local:SessionItem">
+                            <Grid ColumnDefinitions="*,24">
+                                <StackPanel Spacing="2">
+                                    <TextBlock Text="{Binding Name}" FontWeight="Bold"
+                                               Foreground="{DynamicResource HeadingBrush}" />
+                                    <TextBlock Text="{Binding Subtitle}" FontSize="12"
+                                               Foreground="{DynamicResource FineBrush}" />
+                                </StackPanel>
+                                <Button Grid.Column="1" Classes="remove" Content="✕"
+                                        Click="DeleteSession" VerticalAlignment="Top" Margin="8,-2,0,0"
+                                        AutomationProperties.Name="Delete this saved session"
+                                        ToolTip.Tip="Delete this saved session" />
+                            </Grid>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+                <ToggleSwitch Grid.Row="2" x:Name="WidgetSwitch" Content="Widget" Margin="0,12,0,0"
+                              HorizontalAlignment="Left" FontSize="12"
+                              Foreground="{DynamicResource MutedBrush}"
+                              ToolTip.Tip="Show a small always-on-top window with your saved sessions" />
+            </Grid>
+
+            <Border Grid.Column="1" Background="{DynamicResource RuleBrush}" />
+
+            <Grid Grid.Column="2" Margin="22,0,0,0">
+                <StackPanel x:Name="EmptyState" Spacing="8" VerticalAlignment="Top">
+                    <TextBlock Text="Nothing saved yet." FontSize="16" FontWeight="Bold"
+                               Foreground="{DynamicResource HeadingBrush}" />
+                    <StackPanel Spacing="6">
+                        <TextBlock Text="1. Type a name above, for example &quot;monday-lab&quot;."
+                                   Foreground="{DynamicResource MutedBrush}" />
+                        <TextBlock Text="2. Press &quot;Save this session&quot;."
+                                   Foreground="{DynamicResource MutedBrush}" />
+                        <TextBlock Text="3. Later, pick that session on the left and press &quot;Reopen selected&quot;."
+                                   Foreground="{DynamicResource MutedBrush}" TextWrapping="Wrap" />
+                    </StackPanel>
+                </StackPanel>
+
+                <ScrollViewer x:Name="DetailsScroll" IsVisible="False">
+                    <StackPanel Spacing="20">
+                        <StackPanel Spacing="4">
+                            <TextBlock x:Name="SnapshotName" FontSize="18" FontWeight="Bold"
+                                       Foreground="{DynamicResource HeadingBrush}" TextWrapping="Wrap" />
+                            <TextBlock x:Name="SnapshotInfo" Foreground="{DynamicResource MutedBrush}"
+                                       TextWrapping="Wrap" />
+                        </StackPanel>
+
+                        <StackPanel Spacing="8">
+                            <TextBlock x:Name="AppsHeader" FontSize="12" FontWeight="Bold"
+                                       Foreground="{DynamicResource MutedBrush}" />
+                            <ItemsControl x:Name="AppList">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate x:DataType="local:AppRow">
+                                        <Grid ColumnDefinitions="30,*,24" Margin="0,2">
+                                            <Image Width="22" Height="22" Source="{Binding Icon}"
+                                                   VerticalAlignment="Center" />
+                                            <TextBlock Grid.Column="1" Text="{Binding Name}"
+                                                       VerticalAlignment="Center" Margin="8,0,8,0" />
+                                            <Button Grid.Column="2" Classes="remove" Content="✕"
+                                                    Click="RemoveApp"
+                                                    AutomationProperties.Name="Do not reopen this app"
+                                                    ToolTip.Tip="Do not reopen this app" />
+                                        </Grid>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                            <TextBlock x:Name="NoAppsText" Text="none" Foreground="{DynamicResource FineBrush}"
+                                       IsVisible="False" />
+                        </StackPanel>
+
+                        <StackPanel Spacing="8">
+                            <TextBlock x:Name="WindowsHeader" FontSize="12" FontWeight="Bold"
+                                       Foreground="{DynamicResource MutedBrush}" />
+                            <ItemsControl x:Name="WindowList">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate x:DataType="local:WindowRow">
+                                        <Grid ColumnDefinitions="*,24" Margin="0,2">
+                                            <StackPanel Margin="0,1">
+                                                <TextBlock Text="{Binding Title}" TextTrimming="CharacterEllipsis" />
+                                                <TextBlock Text="{Binding Detail}" FontSize="12"
+                                                           Foreground="{DynamicResource FineBrush}" />
+                                            </StackPanel>
+                                            <Button Grid.Column="1" Classes="remove" Content="✕"
+                                                    Click="RemoveWindow" VerticalAlignment="Top" Margin="8,-2,0,0"
+                                                    AutomationProperties.Name="Do not move this window back"
+                                                    ToolTip.Tip="Do not move this window back" />
+                                        </Grid>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                            <TextBlock x:Name="NoWindowsText" Text="none" Foreground="{DynamicResource FineBrush}"
+                                       IsVisible="False" />
+                        </StackPanel>
+
+                        <TextBox x:Name="LogBox" IsReadOnly="True" AcceptsReturn="True" IsVisible="False"
+                                 MaxHeight="220" FontSize="12" Background="{DynamicResource PanelBrush}"
+                                 BorderBrush="{DynamicResource RuleBrush}" Padding="10" TextWrapping="NoWrap"
+                                 ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                 ScrollViewer.HorizontalScrollBarVisibility="Auto" />
+                    </StackPanel>
+                </ScrollViewer>
+            </Grid>
+        </Grid>
+
+        <Border Grid.Row="3" BorderBrush="{DynamicResource RuleBrush}" BorderThickness="0,1,0,0"
+                Padding="0,16,0,0" Margin="0,20,0,0">
+            <Grid ColumnDefinitions="*,Auto">
+                <TextBlock Grid.Column="0" x:Name="StatusText" VerticalAlignment="Center"
+                           Foreground="{DynamicResource MutedBrush}" TextWrapping="Wrap" Margin="0,0,20,0"
+                           Text="Type a name above, then press Save this session." />
+                <Button Grid.Column="1" x:Name="RestoreButton" Classes="primary" Content="Reopen selected"
+                        IsEnabled="False"
+                        ToolTip.Tip="Relaunch the apps in the selected session and move their windows back" />
+            </Grid>
+        </Border>
+
+    </Grid>
+</Window>

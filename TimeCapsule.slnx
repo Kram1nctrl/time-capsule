@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="src/TimeCapsule.Core/TimeCapsule.Core.csproj" />
+  <Project Path="src/TimeCapsule.Cli/TimeCapsule.Cli.csproj" />
+  <Project Path="src/TimeCapsule.Gui/TimeCapsule.Gui.csproj" />
+</Solution>

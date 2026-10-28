@@ -1,0 +1,40 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="using:TimeCapsule.Gui"
+        x:Class="TimeCapsule.Gui.HistoryWidget"
+        Title="Saved sessions"
+        Width="300" Height="380" CanResize="False"
+        WindowDecorations="None"
+        Background="Transparent" TransparencyLevelHint="Transparent"
+        Foreground="{DynamicResource BodyBrush}"
+        FontFamily="JetBrains Mono" FontSize="12">
+
+    <Border BorderBrush="{DynamicResource RuleBrush}" BorderThickness="1" CornerRadius="12"
+            ClipToBounds="True" Background="{DynamicResource PageBrush}">
+        <Grid RowDefinitions="Auto,*" Margin="14">
+            <Grid Grid.Row="0" ColumnDefinitions="*,Auto" Margin="0,0,0,10">
+                <Border Grid.Column="0" Background="Transparent" Cursor="SizeAll"
+                        PointerPressed="DragWidget">
+                    <TextBlock Text="Saved sessions" FontWeight="Bold"
+                               Foreground="{DynamicResource HeadingBrush}" VerticalAlignment="Center" />
+                </Border>
+                <Button Grid.Column="1" Classes="remove" Content="✕" Click="CloseWidget"
+                        AutomationProperties.Name="Close widget"
+                        ToolTip.Tip="Close the widget" />
+            </Grid>
+
+            <ListBox Grid.Row="1" x:Name="SessionList" Tapped="OpenSession">
+                <ListBox.ItemTemplate>
+                    <DataTemplate x:DataType="local:SessionItem">
+                        <StackPanel Spacing="2">
+                            <TextBlock Text="{Binding Name}" FontWeight="Bold"
+                                       Foreground="{DynamicResource HeadingBrush}" TextTrimming="CharacterEllipsis" />
+                            <TextBlock Text="{Binding Subtitle}" FontSize="11"
+                                       Foreground="{DynamicResource FineBrush}" TextTrimming="CharacterEllipsis" />
+                        </StackPanel>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </Grid>
+    </Border>
+</Window>
