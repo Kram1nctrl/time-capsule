@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+# Runs Time Capsule from this folder, without installing it.
+# To add it to your application menu, run: bash install.sh
+cd "$(dirname "$0")" || exit 1
+BIN=time-capsule/time-capsule-gui
+if [ ! -x "$BIN" ]; then
+    echo "Time Capsule is not here. Extract the whole release archive first." >&2
+    exit 1
+fi
+exec "./$BIN" "$@"
