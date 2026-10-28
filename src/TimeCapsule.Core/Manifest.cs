@@ -38,6 +38,7 @@ public sealed class WindowEntry
     public int Pid { get; set; }
     public string Title { get; set; } = "";
     public string Class { get; set; } = "";
+    public bool Maximized { get; set; }
     public int Desktop { get; set; }
     public int X { get; set; }
     public int Y { get; set; }

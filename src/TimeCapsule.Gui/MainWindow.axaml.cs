@@ -302,7 +302,7 @@ public partial class MainWindow : Window
             _confirming = item.Name;
             RestoreButton.Content = "Click again to confirm";
             StatusText.Text = manifest.Processes.Count > 0
-                ? $"This will open {Sessions.Apps(manifest.Processes.Count)} next to the ones already running. "
+                ? $"This will reopen '{manifest.Name}'. Apps already open are moved back into place. "
                     + "Click again to confirm."
                 : $"This will put back {Sessions.Windows(manifest.Windows.Count)} only. Click again to confirm.";
             return;

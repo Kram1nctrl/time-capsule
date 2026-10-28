@@ -24,12 +24,12 @@ The app is for 64-bit Linux only; it does not run on Windows or macOS.
 
 ### Linux Mint, Ubuntu, Debian (recommended)
 
-Download `time-capsule_1.1.1_amd64.deb` from the
+Download `time-capsule_1.2.0_amd64.deb` from the
 [releases page](https://github.com/Kram1nctrl/time-capsule/releases) and
 double-click it, or run:
 
 ```bash
-sudo apt install ./time-capsule_1.1.1_amd64.deb
+sudo apt install ./time-capsule_1.2.0_amd64.deb
 ```
 
 It installs into the application menu with its icon and the bundled font.
@@ -37,11 +37,11 @@ Remove it with `sudo apt remove time-capsule`.
 
 ### Other Linux systems
 
-Download `time-capsule-1.1.1-linux-x64.tar.gz`, then:
+Download `time-capsule-1.2.0-linux-x64.tar.gz`, then:
 
 ```bash
-tar xzf time-capsule-1.1.1-linux-x64.tar.gz
-cd time-capsule-1.1.1
+tar xzf time-capsule-1.2.0-linux-x64.tar.gz
+cd time-capsule-1.2.0
 ```
 
 Double-click **Time Capsule** to use it without installing, or run
@@ -74,6 +74,11 @@ The window works in three steps:
    to leave it out of the restore; **Refresh** brings it back.
 3. Press **Reopen selected**, then click once more to confirm. Progress and any
    problems appear in the log under the lists.
+
+Apps that are already open are moved back into place instead of being started a
+second time. Windows come back with their saved size, position, workspace and
+maximized state. Some apps (browsers in particular) reopen their own tabs or
+last session rather than the exact pages that were saved.
 
 The **✕** on a saved session deletes that snapshot file; click it twice to
 confirm.

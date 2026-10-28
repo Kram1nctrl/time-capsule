@@ -85,6 +85,7 @@ public static class Inspector
                 Pid = pid,
                 Title = f[9].Trim(),
                 Class = f[7],
+                Maximized = IsMaximized(f[0]),
                 Desktop = desktop,
                 X = x,
                 Y = y,
@@ -92,6 +93,13 @@ public static class Inspector
                 Height = height,
             };
         }
+    }
+
+    static bool IsMaximized(string id)
+    {
+        var state = Shell.Run("xprop", "-id", id, "_NET_WM_STATE") ?? "";
+        return state.Contains("_NET_WM_STATE_MAXIMIZED_VERT")
+            && state.Contains("_NET_WM_STATE_MAXIMIZED_HORZ");
     }
 
     static bool HasTty(int pid)
