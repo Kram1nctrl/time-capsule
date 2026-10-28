@@ -3,6 +3,7 @@
         xmlns:local="using:TimeCapsule.Gui"
         x:Class="TimeCapsule.Gui.MainWindow"
         Title="Time Capsule"
+        Icon="/Assets/time-capsule.png"
         Width="1000" Height="680" MinWidth="780" MinHeight="500"
         Background="{DynamicResource PageBrush}" Foreground="{DynamicResource BodyBrush}" FontSize="13"
         FontFamily="JetBrains Mono">

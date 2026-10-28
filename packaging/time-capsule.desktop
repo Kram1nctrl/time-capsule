@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=Time Capsule
+Comment=Save the apps and windows you have open, and reopen them later
+Exec=@EXEC@
+Icon=time-capsule
+Terminal=false
+Categories=Utility;
+Keywords=session;restore;snapshot;windows;
+StartupNotify=true

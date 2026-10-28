@@ -18,6 +18,26 @@ This machine keeps the SDK in `~/dotnet10`, so either put it on your `PATH` or r
 `dotnet` as `~/dotnet10/dotnet`. `run-gui.sh` handles this for the GUI. After
 editing code, run `dotnet build` once; the launcher reuses the last build.
 
+## Install as an app
+
+Download `time-capsule-1.0.0-linux-x64.tar.gz` from the
+[releases page](https://github.com/Kram1nctrl/time-capsule/releases), then:
+
+```bash
+tar xzf time-capsule-1.0.0-linux-x64.tar.gz
+cd time-capsule-1.0.0
+./install.sh
+```
+
+This installs the self-contained app in `~/.local/opt/time-capsule`, a launcher
+in `~/.local/bin/time-capsule`, the **Time Capsule** entry in your application
+menu, its icon and the bundled font. Nothing needs root or the .NET SDK.
+From a source checkout, `./install.sh` builds the app first (needs .NET 10).
+
+To uninstall, delete `~/.local/opt/time-capsule`, `~/.local/bin/time-capsule`,
+`~/.local/share/applications/time-capsule.desktop` and
+`~/.local/share/icons/hicolor/256x256/apps/time-capsule.png`.
+
 ## GUI
 
 ```bash

@@ -16,6 +16,10 @@
     </ItemGroup>
 
     <ItemGroup>
+        <AvaloniaResource Include="Assets/**" />
+    </ItemGroup>
+
+    <ItemGroup>
         <ProjectReference Include="..\TimeCapsule.Core\TimeCapsule.Core.csproj" />
     </ItemGroup>
 
