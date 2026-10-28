@@ -20,12 +20,12 @@ editing code, run `dotnet build` once; the launcher reuses the last build.
 
 ## Install as an app
 
-Download `time-capsule-1.0.0-linux-x64.tar.gz` from the
+Download `time-capsule-1.1.0-linux-x64.tar.gz` from the
 [releases page](https://github.com/Kram1nctrl/time-capsule/releases), then:
 
 ```bash
-tar xzf time-capsule-1.0.0-linux-x64.tar.gz
-cd time-capsule-1.0.0
+tar xzf time-capsule-1.1.0-linux-x64.tar.gz
+cd time-capsule-1.1.0
 ./install.sh
 ```
 
@@ -35,8 +35,9 @@ menu, its icon and the bundled font. Nothing needs root or the .NET SDK.
 From a source checkout, `./install.sh` builds the app first (needs .NET 10).
 
 To uninstall, delete `~/.local/opt/time-capsule`, `~/.local/bin/time-capsule`,
-`~/.local/share/applications/time-capsule.desktop` and
-`~/.local/share/icons/hicolor/256x256/apps/time-capsule.png`.
+`~/.local/share/applications/time-capsule.desktop`,
+`~/.local/share/icons/hicolor/256x256/apps/time-capsule.png` and, if you left the
+widget on, `~/.config/autostart/time-capsule-widget.desktop`.
 
 ## GUI
 
@@ -67,7 +68,8 @@ window with the same saved sessions. Click a session in the widget to bring the
 app back with that session selected. It works like a phone widget: closing the
 main window keeps the widget running; switch it off, or click the widget's
 **✕**, to turn it off (this also ends the app if the main window is closed).
-Drag the widget by its "Saved sessions" title.
+The widget is remembered: after a reboot it comes back by itself with your next
+login, until you switch it off. Drag the widget by its "Saved sessions" title.
 
 **Refresh** reloads the list after you add or delete snapshot files by hand.
 

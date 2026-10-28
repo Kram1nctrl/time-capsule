@@ -1,5 +1,6 @@
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Interactivity;
 using Avalonia.Styling;
 using System;
@@ -19,6 +20,9 @@ public partial class MainWindow : Window
     Manifest? _manifest; // selected snapshot, with any apps the user removed
     string? _manifestPath;
     HistoryWidget? _widget;
+    bool _wasShown; // the app window was on screen at least once
+
+    public bool WidgetOn => WidgetSwitch.IsChecked == true;
 
     public MainWindow()
     {
@@ -29,6 +33,7 @@ public partial class MainWindow : Window
         RefreshButton.Click += (_, _) => LoadSessions();
         WidgetSwitch.IsCheckedChanged += (_, _) => ToggleWidget();
         ThemeButton.Click += (_, _) => SetTheme(Application.Current?.RequestedThemeVariant != ThemeVariant.Dark);
+        Opened += (_, _) => _wasShown = true;
         SessionList.SelectionChanged += (_, _) =>
         {
             _deleting = null;
@@ -46,6 +51,9 @@ public partial class MainWindow : Window
         };
 
         LoadSessions();
+
+        // The widget was on when the app last ran: put it back, like a phone widget.
+        if (Autostart.Enabled) WidgetSwitch.IsChecked = true;
     }
 
     void SetTheme(bool dark)
@@ -62,10 +70,12 @@ public partial class MainWindow : Window
     {
         if (WidgetSwitch.IsChecked == true)
         {
+            Autostart.Enable(); // bring the widget back after a reboot
             if (_widget is not { IsVisible: true }) ShowWidget();
             return;
         }
 
+        Autostart.Disable();
         _widget?.Close();
     }
 
@@ -76,7 +86,7 @@ public partial class MainWindow : Window
         {
             _widget = null;
             WidgetSwitch.IsChecked = false; // the widget's ✕ turns the switch off too
-            if (!IsVisible) Close(); // the widget was the last window open
+            if (!IsVisible && _wasShown) Close(); // the widget was the last window open
         };
         _widget.Reload();
         _widget.Show();
