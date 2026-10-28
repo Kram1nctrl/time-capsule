@@ -20,18 +20,32 @@ editing code, run `dotnet build` once; the launcher reuses the last build.
 
 ## Install as an app
 
-Download `time-capsule-1.1.1-linux-x64.tar.gz` from the
-[releases page](https://github.com/Kram1nctrl/time-capsule/releases) (64-bit
-Linux only; it does not run on Windows or macOS), then:
+The app is for 64-bit Linux only; it does not run on Windows or macOS.
+
+### Linux Mint, Ubuntu, Debian (recommended)
+
+Download `time-capsule_1.1.1_amd64.deb` from the
+[releases page](https://github.com/Kram1nctrl/time-capsule/releases) and
+double-click it, or run:
+
+```bash
+sudo apt install ./time-capsule_1.1.1_amd64.deb
+```
+
+It installs into the application menu with its icon and the bundled font.
+Remove it with `sudo apt remove time-capsule`.
+
+### Other Linux systems
+
+Download `time-capsule-1.1.1-linux-x64.tar.gz`, then:
 
 ```bash
 tar xzf time-capsule-1.1.1-linux-x64.tar.gz
 cd time-capsule-1.1.1
 ```
 
-To try it without installing, double-click **Time Capsule** (or run
-`./"Time Capsule"` in a terminal). To add it to your application menu, run
-`bash install.sh`.
+Double-click **Time Capsule** to use it without installing, or run
+`bash install.sh` to add it to your application menu.
 
 This installs the self-contained app in `~/.local/opt/time-capsule`, a launcher
 in `~/.local/bin/time-capsule`, the **Time Capsule** entry in your application
