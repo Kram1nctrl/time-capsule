@@ -6,6 +6,7 @@ try
     {
         "save" => Save(args),
         "list" => List(),
+        "tabs" => Tabs(),
         "restore" => Restore(args),
         _ => Help(),
     };
@@ -36,6 +37,26 @@ int List()
 
     foreach (var file in files)
         Console.WriteLine($"{Path.GetFileNameWithoutExtension(file)}\t{File.GetLastWriteTime(file):yyyy-MM-dd HH:mm}");
+    return 0;
+}
+
+int Tabs()
+{
+    var windows = Firefox.ReadWindows();
+    if (windows.Count == 0)
+    {
+        Console.WriteLine("No Firefox session store found.");
+        return 0;
+    }
+
+    foreach (var window in windows)
+    {
+        var count = window.Tabs.Count == 1 ? "1 tab" : $"{window.Tabs.Count} tabs";
+        Console.WriteLine($"{window.Width}x{window.Height} at {window.X},{window.Y} - {count}");
+        foreach (var tab in window.Tabs)
+            Console.WriteLine($"  {(tab.Active ? "*" : " ")} {tab.Title}\t{tab.Url}");
+    }
+
     return 0;
 }
 
@@ -74,6 +95,7 @@ int Help()
         usage:
           time-capsule save [tag]                 snapshot processes, arguments, cwds and windows
           time-capsule list                       list saved snapshots
+          time-capsule tabs                       show the tabs Firefox has open
           time-capsule restore <name|path>        relaunch a snapshot
           time-capsule restore <name> --dry-run   show what would be launched
           time-capsule help

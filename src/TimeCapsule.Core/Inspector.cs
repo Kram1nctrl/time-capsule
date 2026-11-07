@@ -14,6 +14,7 @@ public static class Inspector
         // Its own window would never be found again on restore.
         var windows = ReadWindows().Where(w => w.Pid != Environment.ProcessId).ToList();
         manifest.Windows.AddRange(windows);
+        Firefox.Attach(manifest);
         var windowPids = windows.Select(w => w.Pid).ToHashSet();
 
         var uid = UidOf("/proc/self/status");

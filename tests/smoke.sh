@@ -25,6 +25,6 @@ grep -q '"createdUtc"' "$manifest"
 run list | grep -q "$TAG"
 
 # Short tag resolves to the dated file, and dry-run launches nothing.
-run restore "$TAG" --dry-run | grep -q 'would run'
+run restore "$TAG" --dry-run | grep -Eq 'would (run|open)'
 
 echo "smoke test passed"

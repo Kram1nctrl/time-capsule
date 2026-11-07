@@ -12,7 +12,9 @@ public static class Launcher
         var failed = 0;
         output($"Restoring '{manifest.Name}' ({Plural(manifest.Processes.Count, "process", "processes")}, {Plural(manifest.Windows.Count, "window", "windows")}) from {manifest.CreatedUtc:u}");
 
-        var openClasses = OpenWindows().Select(w => w.Class).ToHashSet();
+        var before = OpenWindows();
+        var openClasses = before.Select(w => w.Class).ToHashSet();
+        var beforeIds = before.Select(w => w.Id).ToHashSet();
 
         foreach (var entry in manifest.Processes)
         {
@@ -20,6 +22,55 @@ public static class Launcher
             {
                 output($"missing   {entry.Exe}");
                 failed++;
+                continue;
+            }
+
+            // Firefox windows saved with tabs are reopened with those pages, even
+            // when Firefox is already running: that is the point of saving them.
+            var tabbed = manifest.Windows
+                .Where(w => w.Pid == entry.Pid && w.Tabs.Count > 0 && Firefox.IsFirefox(w.Class))
+                .ToList();
+
+            if (tabbed.Count > 0)
+            {
+                var tabs = tabbed.Sum(window => window.Tabs.Count);
+                if (dryRun)
+                {
+                    output($"would open {entry.Exe} --new-window ({Plural(tabs, "tab", "tabs")} in {Plural(tabbed.Count, "window", "windows")})");
+                    continue;
+                }
+
+                try
+                {
+                    foreach (var window in tabbed)
+                    {
+                        // The tab that was in front goes last, so Firefox selects it.
+                        var ordered = window.Tabs.Where(tab => !tab.Active)
+                            .Concat(window.Tabs.Where(tab => tab.Active)).ToList();
+
+                        // Firefox opens the first address in the new window and would put
+                        // the rest in a second window, so the tabs follow in their own call.
+                        Launch(entry.Exe, "--new-window", ordered[0].Url);
+                        if (ordered.Count > 1)
+                        {
+                            Thread.Sleep(1000); // the new window must be focused before --new-tab
+                            // One address per call: a list after --new-tab makes Firefox
+                            // spread the extra addresses into further windows.
+                            foreach (var tab in ordered.Skip(1))
+                            {
+                                Launch(entry.Exe, "--new-tab", tab.Url);
+                                Thread.Sleep(200);
+                            }
+                        }
+                        if (tabbed.Count > 1) Thread.Sleep(500);
+                    }
+                    output($"tabs      {entry.Exe} ({Plural(tabs, "tab", "tabs")} in {Plural(tabbed.Count, "window", "windows")})");
+                }
+                catch (Exception ex)
+                {
+                    output($"failed    {entry.Exe}: {ex.Message}");
+                    failed++;
+                }
                 continue;
             }
 
@@ -60,12 +111,12 @@ public static class Launcher
         if (dryRun || manifest.Windows.Count == 0) return failed == 0 ? 0 : 1;
 
         // Window ids change on relaunch and titles change with the page/document,
-        // so pair each saved window with the first open window of the same class.
-        // shortcut: several windows of one class are paired in list order; add a stable per-window key if that matters.
+        // so pair by the title that did not change first, then by class.
+        // shortcut: several windows of one class without a matching title are paired in list order; add a stable per-window key if that matters.
         output("waiting for windows...");
         var remaining = new List<WindowEntry>(manifest.Windows);
         var used = new HashSet<string>();
-        var until = DateTime.UtcNow.AddSeconds(WindowWaitMs);
+        var until = DateTime.UtcNow.AddMilliseconds(WindowWaitMs);
 
         while (remaining.Count > 0 && DateTime.UtcNow < until)
         {
@@ -73,7 +124,11 @@ public static class Launcher
             {
                 if (used.Contains(open.Id)) continue;
 
-                var index = remaining.FindIndex(saved => saved.Class == open.Class || saved.Title == open.Title);
+                var index = remaining.FindIndex(saved =>
+                    saved.Title == open.Title && (saved.Tabs.Count == 0 || !beforeIds.Contains(open.Id)));
+                if (index < 0)
+                    index = remaining.FindIndex(saved =>
+                        saved.Class == open.Class && (saved.Tabs.Count == 0 || !beforeIds.Contains(open.Id)));
                 if (index < 0) continue;
 
                 var saved = remaining[index];
@@ -102,6 +157,13 @@ public static class Launcher
         }
 
         return failed == 0 ? 0 : 1;
+    }
+
+    static void Launch(string exe, params string[] args)
+    {
+        var psi = new ProcessStartInfo(exe) { UseShellExecute = false };
+        foreach (var arg in args) psi.ArgumentList.Add(arg);
+        Process.Start(psi);
     }
 
     static bool Place(string id, WindowEntry window)

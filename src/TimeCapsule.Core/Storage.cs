@@ -11,7 +11,7 @@ public static class Storage
     /// <summary>Saved snapshots, newest first.</summary>
     public static string[] List() =>
         Directory.Exists(SessionsDir)
-            ? Directory.GetFiles(SessionsDir, "*.json").OrderByDescending(f => f).ToArray()
+            ? Directory.GetFiles(SessionsDir, "*.json").OrderByDescending(File.GetLastWriteTimeUtc).ToArray()
             : Array.Empty<string>();
 
     /// <summary>A tag reduced to file-name-safe characters.</summary>

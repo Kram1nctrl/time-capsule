@@ -135,6 +135,25 @@
                                                 <TextBlock Text="{Binding Title}" TextTrimming="CharacterEllipsis" />
                                                 <TextBlock Text="{Binding Detail}" FontSize="12"
                                                            Foreground="{DynamicResource FineBrush}" />
+                                                <ItemsControl ItemsSource="{Binding Tabs}" Margin="0,4,0,0">
+                                                    <ItemsControl.ItemTemplate>
+                                                        <DataTemplate x:DataType="local:TabRow">
+                                                            <Grid ColumnDefinitions="Auto,*" Margin="0,1">
+                                                                <TextBlock Text="•" FontSize="11"
+                                                                           Foreground="{DynamicResource FineBrush}"
+                                                                           Margin="0,0,6,0" />
+                                                                <StackPanel Grid.Column="1">
+                                                                    <TextBlock Text="{Binding Title}" FontSize="12"
+                                                                               Foreground="{DynamicResource MutedBrush}"
+                                                                               TextTrimming="CharacterEllipsis" />
+                                                                    <TextBlock Text="{Binding Url}" FontSize="11"
+                                                                               Foreground="{DynamicResource FineBrush}"
+                                                                               TextTrimming="CharacterEllipsis" />
+                                                                </StackPanel>
+                                                            </Grid>
+                                                        </DataTemplate>
+                                                    </ItemsControl.ItemTemplate>
+                                                </ItemsControl>
                                             </StackPanel>
                                             <Button Grid.Column="1" Classes="remove" Content="✕"
                                                     Click="RemoveWindow" VerticalAlignment="Top" Margin="8,-2,0,0"

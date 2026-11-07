@@ -36,4 +36,6 @@ static class Sessions
     public static string Apps(int count) => count == 1 ? "1 app" : $"{count} apps";
 
     public static string Windows(int count) => count == 1 ? "1 window" : $"{count} windows";
+
+    public static string Tabs(int count) => count == 1 ? "1 tab" : $"{count} tabs";
 }

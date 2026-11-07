@@ -5,8 +5,10 @@ desktop app or the command line.
 
 A snapshot saves, for every interactive process (one with a terminal or a window):
 the executable, its arguments, and its working directory — plus every X11 window's
-title, virtual desktop and geometry. Restoring relaunches each app with the same
-arguments and `cwd`, then puts the windows back where they were.
+title, virtual desktop and geometry. For Firefox windows it also saves the tabs,
+so the pages come back too. Restoring relaunches each app with the same
+arguments and `cwd`, opens the saved Firefox windows with their tabs, then puts
+the windows back where they were.
 
 ## Build
 
@@ -24,12 +26,12 @@ The app is for 64-bit Linux only; it does not run on Windows or macOS.
 
 ### Linux Mint, Ubuntu, Debian (recommended)
 
-Download `time-capsule_1.2.0_amd64.deb` from the
+Download `time-capsule_1.3.0_amd64.deb` from the
 [releases page](https://github.com/Kram1nctrl/time-capsule/releases) and
 double-click it, or run:
 
 ```bash
-sudo apt install ./time-capsule_1.2.0_amd64.deb
+sudo apt install ./time-capsule_1.3.0_amd64.deb
 ```
 
 It installs into the application menu with its icon and the bundled font.
@@ -37,11 +39,11 @@ Remove it with `sudo apt remove time-capsule`.
 
 ### Other Linux systems
 
-Download `time-capsule-1.2.0-linux-x64.tar.gz`, then:
+Download `time-capsule-1.3.0-linux-x64.tar.gz`, then:
 
 ```bash
-tar xzf time-capsule-1.2.0-linux-x64.tar.gz
-cd time-capsule-1.2.0
+tar xzf time-capsule-1.3.0-linux-x64.tar.gz
+cd time-capsule-1.3.0
 ```
 
 Double-click **Time Capsule** to use it without installing, or run
@@ -76,9 +78,14 @@ The window works in three steps:
    problems appear in the log under the lists.
 
 Apps that are already open are moved back into place instead of being started a
-second time. Windows come back with their saved size, position, workspace and
-maximized state. Some apps (browsers in particular) reopen their own tabs or
-last session rather than the exact pages that were saved.
+second time — except Firefox: its saved windows are reopened with their tabs,
+even when Firefox is running, because that is the point of saving them. Windows
+come back with their saved size, position, workspace and maximized state, and the
+tab that was in front is selected again. Other browsers (and apps that restore
+their own tabs) come back as windows only.
+
+For Firefox windows, the list of windows also shows the saved tabs under each
+window. Firefox is the only browser with tab capture for now.
 
 The **✕** on a saved session deletes that snapshot file; click it twice to
 confirm.
@@ -101,12 +108,14 @@ login, until you switch it off. Drag the widget by its "Saved sessions" title.
 ```bash
 dotnet src/TimeCapsule.Cli/bin/Debug/net10.0/time-capsule.dll save embedded-lab
 dotnet src/TimeCapsule.Cli/bin/Debug/net10.0/time-capsule.dll list
+dotnet src/TimeCapsule.Cli/bin/Debug/net10.0/time-capsule.dll tabs
 dotnet src/TimeCapsule.Cli/bin/Debug/net10.0/time-capsule.dll restore embedded-lab
 dotnet src/TimeCapsule.Cli/bin/Debug/net10.0/time-capsule.dll restore embedded-lab --dry-run
 ```
 
 `restore` accepts the full name, a path to a JSON file, or a unique prefix of a
-saved name.
+saved name. `tabs` shows what Firefox has open right now (read from Firefox's
+session store) — useful to check that tab capture is working.
 
 Snapshots are plain JSON in `~/.local/share/time-capsule/sessions/`
 (`$XDG_DATA_HOME` is honoured), named `<tag>-<yyyy-MM-dd>.json`. A second snapshot
@@ -116,10 +125,11 @@ same folder.
 ## Layout
 
 ```
-src/TimeCapsule.Core/   capture, manifest, restore, storage   (no UI)
+src/TimeCapsule.Core/   capture, manifest, restore, storage, Firefox tabs   (no UI)
 src/TimeCapsule.Cli/    command line front end
 src/TimeCapsule.Gui/    Avalonia desktop front end, bundled JetBrains Mono in fonts/
 tests/smoke.sh          save -> manifest checks -> dry-run
+tests/tabs.sh           Firefox session-store decoding -> restore through a fake browser
 run-gui.sh              launcher: builds if needed, installs the font, starts the GUI
 ```
 
@@ -135,7 +145,12 @@ run-gui.sh              launcher: builds if needed, installs the font, starts th
   ],
   "windows": [
     { "pid": 1505, "title": "kernel.c — gedit", "class": "gedit.Gedit", "desktop": 0,
-      "x": 0, "y": 72, "width": 1366, "height": 699 }
+      "x": 0, "y": 72, "width": 1366, "height": 699 },
+    { "pid": 4711, "title": "Firefox — Mozilla Firefox", "class": "Navigator.firefox",
+      "desktop": 0, "x": 0, "y": 72, "width": 1366, "height": 699,
+      "tabs": [
+        { "title": "Example Domain", "url": "https://example.com/", "active": true }
+      ] }
   ]
 }
 ```
@@ -148,14 +163,26 @@ run-gui.sh              launcher: builds if needed, installs the font, starts th
   the live desktop session (pipewire, xfce4-session, …).
 - **Windows** come from `wmctrl -lpGx`. The tool is optional; without it snapshots
   simply contain no windows.
+- **Firefox tabs** come from Firefox's own session store
+  (`sessionstore-backups/recovery.jsonlz4` in the default profile, mozLz4
+  format), so no extension is needed. Each saved Firefox window gets the tabs of
+  the store window whose title and size match it.
 - **Restore** checks every `exe` still exists, launches with
   `ProcessStartInfo` + `ArgumentList` (no shell quoting bugs) and the saved
-  `WorkingDirectory`, then waits 6s and arranges windows with `wmctrl -F -r`.
+  `WorkingDirectory`, then waits up to 10s and arranges windows with
+  `wmctrl -F -r`. A saved Firefox window is opened with `--new-window` and its
+  remaining tabs follow as `--new-tab`, one call each; the tab that was in front
+  is added last so Firefox selects it.
 
 ## Known limits
 
-- Windows are matched by title, because ids change on relaunch: two windows with
-  the same title get the same geometry.
+- Firefox writes its tab list periodically (about every 15 seconds), so a tab
+  switched right before saving may be recorded a moment late. Private windows are
+  never in Firefox's session store, so they come back as a window only.
+- Tab capture is Firefox-only. Chrome, Chromium, Electron apps and other browsers
+  come back as windows, with their own tab restore if they have one.
+- Windows are paired with their saved entry by title first, then by class; two
+  windows with the same title and class get their geometry in list order.
 - Sticky windows (panels, the desktop) are not captured, so they are never duplicated.
 - Multi-process apps are only relaunched from their window-owning process; helper
   processes are skipped and reappear on their own.
@@ -164,4 +191,5 @@ run-gui.sh              launcher: builds if needed, installs the font, starts th
 - Window positions are applied as requested; some window managers offset them by
   the decoration size.
 
-Run `tests/smoke.sh` to check the round trip.
+Run `tests/smoke.sh` to check the round trip, and `tests/tabs.sh` for Firefox tab
+decoding and reopening.

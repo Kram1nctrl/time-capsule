@@ -44,4 +44,13 @@ public sealed class WindowEntry
     public int Y { get; set; }
     public int Width { get; set; }
     public int Height { get; set; }
+    public List<TabEntry> Tabs { get; set; } = new();
+}
+
+/// <summary>One browser tab: page title and address, and whether it was the one in front.</summary>
+public sealed class TabEntry
+{
+    public string Title { get; set; } = "";
+    public string Url { get; set; } = "";
+    public bool Active { get; set; }
 }

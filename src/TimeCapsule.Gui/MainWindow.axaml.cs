@@ -195,8 +195,10 @@ public partial class MainWindow : Window
 
         WindowList.ItemsSource = _manifest.Windows.Select(window => new WindowRow(
             window.Title,
-            $"desktop {window.Desktop + 1} · {window.Width}x{window.Height} at {window.X},{window.Y}",
-            window)).ToList();
+            $"desktop {window.Desktop + 1} · {window.Width}x{window.Height} at {window.X},{window.Y}"
+                + (window.Tabs.Count > 0 ? $" · {Sessions.Tabs(window.Tabs.Count)}" : ""),
+            window,
+            window.Tabs.Select(tab => new TabRow(tab.Title, tab.Url)).ToList())).ToList();
         WindowsHeader.Text = $"Windows that will be put back ({_manifest.Windows.Count})";
         NoWindowsText.IsVisible = _manifest.Windows.Count == 0;
     }
@@ -302,7 +304,7 @@ public partial class MainWindow : Window
             _confirming = item.Name;
             RestoreButton.Content = "Click again to confirm";
             StatusText.Text = manifest.Processes.Count > 0
-                ? $"This will reopen '{manifest.Name}'. Apps already open are moved back into place. "
+                ? $"This will reopen '{manifest.Name}'. Firefox windows come back with their tabs; apps already open are moved into place. "
                     + "Click again to confirm."
                 : $"This will put back {Sessions.Windows(manifest.Windows.Count)} only. Click again to confirm.";
             return;

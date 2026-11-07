@@ -12,7 +12,10 @@ public sealed record SessionItem(string Name, string Path, string Subtitle);
 public sealed record AppRow(string Name, Bitmap? Icon, ProcessEntry Process);
 
 /// <summary>One row in the "windows that will be put back" list.</summary>
-public sealed record WindowRow(string Title, string Detail, WindowEntry Window);
+public sealed record WindowRow(string Title, string Detail, WindowEntry Window, IReadOnlyList<TabRow> Tabs);
+
+/// <summary>One saved browser tab under its window.</summary>
+public sealed record TabRow(string Title, string Url);
 
 /// <summary>Display name and icon for an executable, read from its .desktop entry.</summary>
 static class AppIcons
